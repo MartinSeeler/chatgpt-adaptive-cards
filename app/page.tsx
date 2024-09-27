@@ -1,95 +1,84 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import {
+  Box,
+  Container,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+
+const examplePrompts = [
+  "Explain quantum computing in simple terms",
+  "Got any creative ideas for a 10 year old's birthday?",
+  "How do I make an HTTP request in Javascript?",
+  "Can you tell me a joke?",
+];
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <Box sx={{ display: "flex", height: "100vh" }}>
+      {/* Sidebar */}
+      <Box
+        component="nav"
+        className="sidebar"
+        sx={{
+          width: 260,
+          flexShrink: 0,
+          p: 2,
+          overflowY: "auto",
+        }}
+      >
+        <Typography variant="h6" sx={{ mb: 2, color: "inherit" }}>
+          Example prompts
+        </Typography>
+        <List>
+          {examplePrompts.map((prompt, index) => (
+            <ListItem key={index} disablePadding sx={{ mb: 1 }}>
+              <ListItemText primary={prompt} sx={{ color: "inherit" }} />
+            </ListItem>
+          ))}
+        </List>
+      </Box>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      {/* Main content */}
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: 3, display: "flex", flexDirection: "column" }}
+      >
+        <Container maxWidth="md" sx={{ flexGrow: 1, mb: 2 }}>
+          {/* Chat messages would go here */}
+        </Container>
+
+        {/* Input area */}
+        <Paper
+          component="form"
+          className="chat-input"
+          sx={{
+            p: "8px 16px",
+            display: "flex",
+            alignItems: "center",
+            maxWidth: 800,
+            margin: "0 auto",
+            width: "100%",
+            boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+          }}
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+          <TextField
+            fullWidth
+            placeholder="Send a message..."
+            variant="standard"
+            InputProps={{ disableUnderline: true }}
+            sx={{ flex: 1 }}
           />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <Button type="submit" sx={{ minWidth: "auto", p: "10px" }}>
+            <SendIcon />
+          </Button>
+        </Paper>
+      </Box>
+    </Box>
   );
 }
