@@ -14,6 +14,9 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import { useChat } from "ai/react";
 
+import { flightUpdate, calendarReminder, foodOrder } from "../samples";
+import AdaptiveCard from "@/components/adaptive-card";
+
 const examplePrompts = [
   "Explain quantum computing in simple terms",
   "Got any creative ideas for a 10 year old's birthday?",
@@ -60,6 +63,9 @@ export default function Home() {
               {m.content}
             </div>
           ))}
+          <AdaptiveCard card={foodOrder} />
+          <AdaptiveCard card={flightUpdate} />
+          <AdaptiveCard card={calendarReminder} />
         </Container>
 
         {/* Input area */}
