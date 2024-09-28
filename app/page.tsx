@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Box,
   Container,
@@ -10,6 +12,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import { useChat } from "ai/react";
 
 const examplePrompts = [
   "Explain quantum computing in simple terms",
@@ -19,6 +22,7 @@ const examplePrompts = [
 ];
 
 export default function Home() {
+  const { messages, input, handleInputChange, handleSubmit } = useChat();
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
       {/* Sidebar */}
@@ -50,13 +54,19 @@ export default function Home() {
         sx={{ flexGrow: 1, p: 3, display: "flex", flexDirection: "column" }}
       >
         <Container maxWidth="md" sx={{ flexGrow: 1, mb: 2 }}>
-          {/* Chat messages would go here */}
+          {messages.map((m) => (
+            <div key={m.id} className="whitespace-pre-wrap">
+              {m.role === "user" ? "User: " : "AI: "}
+              {m.content}
+            </div>
+          ))}
         </Container>
 
         {/* Input area */}
         <Paper
           component="form"
           className="chat-input"
+          onSubmit={handleSubmit}
           sx={{
             p: "8px 16px",
             display: "flex",
@@ -70,9 +80,10 @@ export default function Home() {
           <TextField
             fullWidth
             placeholder="Send a message..."
+            value={input}
             variant="standard"
-            InputProps={{ disableUnderline: true }}
             sx={{ flex: 1 }}
+            onChange={handleInputChange}
           />
           <Button type="submit" sx={{ minWidth: "auto", p: "10px" }}>
             <SendIcon />
