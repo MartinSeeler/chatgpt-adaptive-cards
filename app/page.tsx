@@ -15,7 +15,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { useChat } from "ai/react";
 
 import { flightUpdate, calendarReminder, foodOrder } from "../samples";
-import AdaptiveCard from "@/components/adaptive-card";
+import AdaptiveCard from "@/components/AdaptiveCard";
 
 const examplePrompts = [
   "Explain quantum computing in simple terms",
