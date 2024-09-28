@@ -41,11 +41,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
   - `globals.css`: Global styles
 - `theme.ts`: Material-UI theme configuration
 
-## Customization
+## Adaptive Cards
 
-You can start customizing the app by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Adaptive Cards from Microsoft are used as additional chat interface in this project.
 
-To change the Material-UI theme, edit the `theme.ts` file.
+### Tools Used
+
+To convert the TypeScript schema for Adaptive Cards to a Zod schema, I used the [transform.tools TypeScript to Zod converter](https://transform.tools/typescript-to-zod). This allows the schema to be used as a tool for the LLM.
 
 ## Learn More
 
