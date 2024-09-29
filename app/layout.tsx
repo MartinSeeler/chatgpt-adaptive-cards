@@ -18,6 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <script
+          type="text/javascript"
+          src="https://unpkg.com/markdown-it/dist/markdown-it.min.js"
+          async
+        ></script>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </head>
       <body>
