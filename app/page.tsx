@@ -1,100 +1,99 @@
 "use client";
 
-import {
-  Box,
-  Container,
-  Paper,
-  Typography,
-  TextField,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-} from "@mui/material";
+import React from "react";
+import { Box, Container, Paper, TextField, Button } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useChat } from "ai/react";
 
-import { flightUpdate, calendarReminder, foodOrder } from "../samples";
 import AdaptiveCard from "@/components/AdaptiveCard";
+import { Message } from "@/components/Message";
+import { orderFoodCard } from "@/samples";
 
-const examplePrompts = [
-  "Explain quantum computing in simple terms",
-  "Got any creative ideas for a 10 year old's birthday?",
-  "How do I make an HTTP request in Javascript?",
-  "Can you tell me a joke?",
-];
+import { ChangeEvent, FormEvent } from "react";
+
+interface ChatInputProps {
+  input: string;
+  handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+const ChatInput: React.FC<ChatInputProps> = ({
+  input,
+  handleInputChange,
+  handleSubmit,
+}) => {
+  return (
+    <form onSubmit={handleSubmit}>
+      <Paper
+        className="chat-input"
+        sx={{
+          p: "8px 16px",
+          display: "flex",
+          alignItems: "center",
+          maxWidth: "600px",
+          margin: "0 auto",
+          width: "100%",
+          boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+        }}
+      >
+        <TextField
+          fullWidth
+          placeholder="Send a message..."
+          value={input}
+          variant="standard"
+          sx={{ flex: 1 }}
+          onChange={handleInputChange}
+        />
+        <Button type="submit" sx={{ minWidth: "auto", p: "10px" }}>
+          <SendIcon />
+        </Button>
+      </Paper>
+    </form>
+  );
+};
+
+ChatInput.displayName = "ChatInput";
 
 export default function Home() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const { messages, input, handleInputChange, handleSubmit, addToolResult } =
+    useChat();
+
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
       {/* Sidebar */}
-      <Box
-        component="nav"
-        className="sidebar"
-        sx={{
-          width: 260,
-          flexShrink: 0,
-          p: 2,
-          overflowY: "auto",
-        }}
-      >
-        <Typography variant="h6" sx={{ mb: 2, color: "inherit" }}>
-          Example prompts
-        </Typography>
-        <List>
-          {examplePrompts.map((prompt, index) => (
-            <ListItem key={index} disablePadding sx={{ mb: 1 }}>
-              <ListItemText primary={prompt} sx={{ color: "inherit" }} />
-            </ListItem>
-          ))}
-        </List>
-      </Box>
 
       {/* Main content */}
       <Box
         component="main"
         sx={{ flexGrow: 1, p: 3, display: "flex", flexDirection: "column" }}
       >
-        <Container maxWidth="md" sx={{ flexGrow: 1, mb: 2 }}>
+        <Container maxWidth="sm" sx={{ flexGrow: 1, mb: 2 }}>
+          <AdaptiveCard
+            key={"demo-card"}
+            card={orderFoodCard}
+            onAction={(data) => {
+              console.log("Card action", data);
+            }}
+          />
           {messages.map((m) => (
-            <div key={m.id} className="whitespace-pre-wrap">
-              {m.role === "user" ? "User: " : "AI: "}
-              {m.content}
-            </div>
+            <Message
+              key={m.id}
+              role={m.role}
+              content={m.content}
+              toolInvocations={m.toolInvocations}
+              onToolResult={(toolCallId, result) => {
+                addToolResult({ toolCallId, result });
+              }}
+            />
           ))}
-          <AdaptiveCard card={foodOrder} />
-          <AdaptiveCard card={flightUpdate} />
-          <AdaptiveCard card={calendarReminder} />
         </Container>
 
         {/* Input area */}
-        <Paper
-          component="form"
-          className="chat-input"
-          onSubmit={handleSubmit}
-          sx={{
-            p: "8px 16px",
-            display: "flex",
-            alignItems: "center",
-            maxWidth: 800,
-            margin: "0 auto",
-            width: "100%",
-            boxShadow: "0 0 15px rgba(0,0,0,0.1)",
-          }}
-        >
-          <TextField
-            fullWidth
-            placeholder="Send a message..."
-            value={input}
-            variant="standard"
-            sx={{ flex: 1 }}
-            onChange={handleInputChange}
-          />
-          <Button type="submit" sx={{ minWidth: "auto", p: "10px" }}>
-            <SendIcon />
-          </Button>
-        </Paper>
+        <ChatInput
+          input={input}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+        />
       </Box>
     </Box>
   );

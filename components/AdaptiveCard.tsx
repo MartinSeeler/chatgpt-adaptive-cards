@@ -4,9 +4,10 @@ import type { IAdaptiveCard } from "adaptivecards/lib/schema";
 
 export type AdaptiveCardProps = {
   card: IAdaptiveCard;
+  onAction?: (actionType: string, data: string) => void;
 };
 
-const AdaptiveCard = ({ card }: AdaptiveCardProps) => {
+const AdaptiveCard = ({ card, onAction }: AdaptiveCardProps) => {
   const cardWrapperRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -15,11 +16,24 @@ const AdaptiveCard = ({ card }: AdaptiveCardProps) => {
     const adaptiveCard = new AdaptiveCards.AdaptiveCard();
     adaptiveCard.parse(card);
 
+    // Set up the onExecuteAction handler
+    adaptiveCard.onExecuteAction = (action) => {
+      if (onAction) {
+        // Handle Submit and OpenUrl actions
+        if (action instanceof AdaptiveCards.SubmitAction) {
+          onAction("submit", action.data ? JSON.stringify(action.data) : "");
+        } else {
+          // For other action types (like ShowCard)
+          onAction("other", action ? JSON.stringify(action) : "");
+        }
+      }
+    };
+
     if (cardWrapperRef.current) {
       cardWrapperRef.current.innerHTML = "";
       adaptiveCard.render(cardWrapperRef.current);
     }
-  }, [card, cardWrapperRef]);
+  }, [card, cardWrapperRef, onAction]);
 
   return <div ref={cardWrapperRef} />;
 };
