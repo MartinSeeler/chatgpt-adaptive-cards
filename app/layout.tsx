@@ -4,7 +4,6 @@ import "./globals.css";
 
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../theme";
-import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "ChatGPT-like Interface",
@@ -28,10 +27,7 @@ export default function RootLayout({
       </head>
       <body>
         <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <Navbar />
-            {children}
-          </ThemeProvider>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
