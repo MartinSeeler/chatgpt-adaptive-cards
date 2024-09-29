@@ -1,79 +1,108 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { BotIcon } from "./icons";
-import { ReactNode } from "react";
-import { StreamableValue, useStreamableValue } from "ai/rsc";
-import { ToolInvocation } from "ai";
-import AdaptiveCard from "./AdaptiveCard";
+import { Message as AIMessage } from "ai";
 import { orderFoodCard } from "@/samples";
-import { Markdown } from "./Markdown";
+import AdaptiveCard from "@/components/AdaptiveCard";
+import { Markdown } from "@/components/Markdown";
+import { Fade, Typography, Box, Paper } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-export const Message = ({
+const MessageContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  width: "100%",
+  marginBottom: theme.spacing(2),
+  "&:first-of-type": {
+    marginTop: theme.spacing(10),
+  },
+}));
+
+const MessagePaper = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== "role",
+})<{ role: string }>(({ theme, role }) => ({
+  maxWidth: "80%",
+  paddingRight: theme.spacing(2),
+  paddingLeft: theme.spacing(2),
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
+  backgroundColor:
+    role === "assistant"
+      ? theme.palette.grey[100]
+      : theme.palette.primary.light,
+  color:
+    role === "assistant"
+      ? theme.palette.text.primary
+      : theme.palette.primary.contrastText,
+  borderRadius:
+    role === "assistant" ? "20px 20px 20px 5px" : "20px 20px 5px 20px",
+}));
+
+const ContentBox = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+  gap: 2,
+});
+
+type MessageProps = Pick<AIMessage, "role" | "content" | "toolInvocations"> & {
+  onToolResult: (toolCallId: string, result: string) => void;
+};
+
+export const Message: React.FC<MessageProps> = ({
+  role,
   content,
   toolInvocations,
   onToolResult,
-}: {
-  role: string;
-  content: string | ReactNode;
-  toolInvocations: Array<ToolInvocation> | undefined;
-  onToolResult: (toolCallId: string, result: string) => void;
 }) => {
   return (
-    <motion.div
-      className={`flex flex-row gap-4 px-4 w-full md:w-[500px] md:px-0 first-of-type:pt-20`}
-      initial={{ y: 5, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-    >
-      {/* <div className="size-[24px] flex flex-col justify-center items-center flex-shrink-0 text-zinc-400">
-        {role === "assistant" ? <BotIcon /> : <UserIcon />}
-      </div> */}
+    <Fade in={true} style={{ transitionDelay: "100ms" }}>
+      <MessageContainer
+        sx={{
+          justifyContent: role === "assistant" ? "flex-start" : "flex-end",
+        }}
+      >
+        <MessagePaper elevation={2} role={role}>
+          <ContentBox>
+            {content && (
+              <Box>
+                <Markdown>{content as string}</Markdown>
+              </Box>
+            )}
 
-      <div className="flex flex-col gap-6 w-full">
-        {content && (
-          <div className="text-zinc-800 dark:text-zinc-300 flex flex-col gap-4">
-            <Markdown>{content as string}</Markdown>
-          </div>
-        )}
-
-        {toolInvocations && (
-          <div className="flex flex-col gap-4">
-            {toolInvocations.map((toolInvocation) => {
+            {toolInvocations?.map((toolInvocation) => {
               const { toolName, toolCallId, state } = toolInvocation;
 
-              if (state === "result") {
-                const { result } = toolInvocation;
+              if (state !== "result") return null;
 
-                return (
-                  <div key={toolCallId}>
-                    {toolName === "showOrderDetails" ? (
-                      <div>
-                        <h1>Show Order Conf</h1>
+              const { result } = toolInvocation;
+
+              return (
+                <Box key={toolCallId}>
+                  {toolName === "showOrderDetails" && (
+                    <Box>
+                      <Typography variant="h6">Show Order Conf</Typography>
+                      <Typography variant="body1">
                         {JSON.stringify(result, null, 2)}
-                      </div>
-                    ) : null}
-                    {toolName === "createOrder"
-                      ? !result && (
-                          <AdaptiveCard
-                            card={orderFoodCard}
-                            onAction={(actionType, data) => {
-                              onToolResult(
-                                toolCallId,
-                                "The user has ordered the following menu: " +
-                                  JSON.stringify(data)
-                              );
-                              console.log("Card action", toolCallId, data);
-                            }}
-                          />
-                        )
-                      : null}
-                  </div>
-                );
-              }
+                      </Typography>
+                    </Box>
+                  )}
+                  {toolName === "createOrder" && !result && (
+                    <AdaptiveCard
+                      card={orderFoodCard}
+                      onAction={(actionType, data) => {
+                        onToolResult(
+                          toolCallId,
+                          "The user has ordered the following menu: " +
+                            JSON.stringify(data)
+                        );
+                        console.log("Card action", toolCallId, data);
+                      }}
+                    />
+                  )}
+                </Box>
+              );
             })}
-          </div>
-        )}
-      </div>
-    </motion.div>
+          </ContentBox>
+        </MessagePaper>
+      </MessageContainer>
+    </Fade>
   );
 };

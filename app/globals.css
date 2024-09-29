@@ -5,6 +5,7 @@
   --sidebar-fg: #ffffff;
   --input-bg: #ffffff;
   --input-border: #d9d9e3;
+  --text-primary: #343541;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,6 +16,7 @@
     --sidebar-fg: #ffffff;
     --input-bg: #40414f;
     --input-border: #565869;
+    --text-primary: #ffffff;
   }
 }
 
