@@ -12,7 +12,7 @@ const MessageContainer = styled(Box)(({ theme }) => ({
   width: "100%",
   marginBottom: theme.spacing(2),
   "&:first-of-type": {
-    marginTop: theme.spacing(10),
+    marginTop: theme.spacing(2),
   },
 }));
 
