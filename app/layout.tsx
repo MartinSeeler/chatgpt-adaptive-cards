@@ -8,6 +8,7 @@ import theme from "../theme";
 export const metadata: Metadata = {
   title: "ChatGPT-like Interface",
   description: "A ChatGPT-like interface built with Next.js and Material-UI",
+  creator: "Martin Seeler",
 };
 
 export default function RootLayout({
