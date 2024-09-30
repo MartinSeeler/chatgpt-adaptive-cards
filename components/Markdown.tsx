@@ -56,20 +56,12 @@ export const NonMemoizedMarkdown = ({ children }: { children: string }) => {
       );
     },
     ol: ({ children, ...props }: { children: React.ReactNode }) => (
-      <List
-        component="ol"
-        sx={{ listStyleType: "decimal", pl: 4, my: 1 }}
-        {...props}
-      >
+      <List component="ol" sx={{ listStyleType: "decimal", pl: 4 }} {...props}>
         {children}
       </List>
     ),
     ul: ({ children, ...props }: { children: React.ReactNode }) => (
-      <List
-        component="ul"
-        sx={{ listStyleType: "disc", pl: 4, my: 1 }}
-        {...props}
-      >
+      <List component="ul" sx={{ listStyleType: "disc", pl: 4 }} {...props}>
         {children}
       </List>
     ),
@@ -87,24 +79,26 @@ export const NonMemoizedMarkdown = ({ children }: { children: string }) => {
       </Typography>
     ),
     h1: ({ children, ...props }: { children: React.ReactNode }) => (
-      <Typography component="h1" variant="h4" sx={{ mt: 4, mb: 2 }} {...props}>
+      <Typography component="h1" variant="h4" {...props}>
         {children}
       </Typography>
     ),
     h2: ({ children, ...props }: { children: React.ReactNode }) => (
-      <Typography component="h2" variant="h5" sx={{ mt: 3, mb: 2 }} {...props}>
+      <Typography component="h2" variant="h5" {...props}>
         {children}
       </Typography>
     ),
     h3: ({ children, ...props }: { children: React.ReactNode }) => (
-      <Typography component="h3" variant="h6" sx={{ mt: 2, mb: 1 }} {...props}>
+      <Typography component="h3" variant="h6" {...props}>
         {children}
       </Typography>
     ),
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box
+      sx={{ width: "100%", display: "flex", flexDirection: "column", gap: 2 }}
+    >
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={components as Partial<Components>}
