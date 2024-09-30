@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 import * as React from "react";
 import * as AC from "adaptivecards";
 import TextField from "@mui/material/TextField";
@@ -17,10 +17,10 @@ export class TextInput extends AC.TextInput {
 
   // For form submission
   private _value: string = "";
-  public get value(): any {
+  public get value(): string {
     return this._value;
   }
-  public isSet(): any {
+  public isSet(): boolean {
     return this._value ? true : false;
   }
   protected onChange(newValue: string) {
@@ -41,7 +41,7 @@ export class TextInput extends AC.TextInput {
   }
 
   private renderElement(): React.ReactElement {
-    let sharedProps: any = {
+    const sharedProps: object = {
       placeholder: this.placeholder,
       required: this.isRequired,
       error: !this.isValid(),
@@ -49,7 +49,6 @@ export class TextInput extends AC.TextInput {
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         this.onChange(e.target.value),
     };
-    // Default return value to ensure a React element is always returned
     return (
       <StyledTextField
         {...sharedProps}
