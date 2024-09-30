@@ -8,15 +8,14 @@ import {
   TextField,
   Button,
   styled,
-  Grid2 as Grid,
-  Card,
-  CardContent,
-  Link,
-  Typography,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useChat } from "ai/react";
 import { Message } from "@/components/Message";
+import { useScrollToBottom } from "@/components/use-scroll-to-bottom";
+import EmptyScreen from "@/components/EmptyScreen";
+import AdaptiveCard from "@/components/AdaptiveCard";
+import { confirmOrderCardTemplate, personalInfoCard } from "@/samples";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1, 2),
@@ -69,9 +68,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
   );
 };
 
-const MainContent = styled(Box)(({ theme }) => ({
+const MainContent = styled(Box)(({}) => ({
   flexGrow: 1,
-  padding: theme.spacing(3),
   display: "flex",
   flexDirection: "column",
 }));
@@ -81,7 +79,8 @@ const MessageContainer = styled(Container)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   gap: theme.spacing(2),
-  marginBottom: theme.spacing(2),
+  padding: theme.spacing(0),
+  overflow: "auto",
 }));
 
 export default function Home() {
@@ -96,88 +95,19 @@ export default function Home() {
     initialMessages: [],
   });
 
-  const options = [
-    {
-      title: "Menu",
-      description: "Show the menu of the restaurant and help me choose a dish.",
-    },
-    {
-      title: "Markdown",
-      description: "Show me an extended demo of the Markdown feature.",
-    },
-  ];
+  const [messagesContainerRef, messagesEndRef] =
+    useScrollToBottom<HTMLDivElement>();
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box sx={{ display: "flex", height: "100vh", flexDirection: "column" }}>
       <MainContent>
-        <MessageContainer maxWidth="sm">
+        <MessageContainer maxWidth="sm" ref={messagesContainerRef}>
           {messages.length === 0 && (
-            <>
-              <Box textAlign="center" mb={4}>
-                <Typography variant="h4" gutterBottom>
-                  Welcome to the ChatGPT Demo!
-                </Typography>
-                <Typography variant="body1">
-                  This is an advanced ChatGPT-like interface built with{" "}
-                  <Link
-                    href="https://nextjs.org/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Next.js
-                  </Link>{" "}
-                  and{" "}
-                  <Link
-                    href="https://mui.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Material-UI
-                  </Link>
-                  . It leverages the power of the{" "}
-                  <Link
-                    href="https://vercel.com/ai"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Vercel AI SDK
-                  </Link>{" "}
-                  to interact with AI models and{" "}
-                  <Link
-                    href="https://adaptivecards.io/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Adaptive Cards
-                  </Link>{" "}
-                  to render dynamic and interactive responses.
-                </Typography>
-              </Box>
-              <Grid container spacing={3} justifyContent="center">
-                {options.map((option, index) => (
-                  <Grid size={6} key={index}>
-                    <Card
-                      style={{ cursor: "pointer" }}
-                      onClick={() =>
-                        append({
-                          role: "user",
-                          content: option.description,
-                        })
-                      }
-                    >
-                      <CardContent style={{ textAlign: "center" }}>
-                        <Typography variant="h6" gutterBottom>
-                          {option.title}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          {option.description}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </>
+            <EmptyScreen
+              onSelectQuickOption={(content) => {
+                append({ role: "user", content: content });
+              }}
+            />
           )}
           {messages.map((m) => (
             <Message
@@ -190,14 +120,18 @@ export default function Home() {
               }}
             />
           ))}
+          <div ref={messagesEndRef} />
+          {/* <AdaptiveCard card={personalInfoCard} /> */}
         </MessageContainer>
+      </MainContent>
 
+      <Box sx={{ height: "auto" }}>
         <ChatInput
           input={input}
           handleInputChange={handleInputChange}
           handleSubmit={handleSubmit}
         />
-      </MainContent>
+      </Box>
     </Box>
   );
 }

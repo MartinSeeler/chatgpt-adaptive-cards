@@ -1,3 +1,4 @@
+import { ConfirmOrderCardTemplate } from "./index";
 // @ts-nocheck
 
 import type { IAdaptiveCard } from "adaptivecards";
@@ -75,7 +76,7 @@ export const orderFoodCard: IAdaptiveCard = {
           },
           {
             type: "Input.Text",
-            id: "SteakOther",
+            id: "SteakOtherRequest",
             isMultiline: true,
             label: "Any other preparation requests?",
           },
@@ -86,7 +87,7 @@ export const orderFoodCard: IAdaptiveCard = {
             type: "Action.Submit",
             title: "OK",
             data: {
-              FoodChoice: "Steak",
+              SelectedMeal: "Steak",
             },
           },
         ],
@@ -101,7 +102,7 @@ export const orderFoodCard: IAdaptiveCard = {
         body: [
           {
             type: "Input.Toggle",
-            id: "ChickenAllergy",
+            id: "ChickenAllergyInfo",
             valueOn: "noPeanuts",
             valueOff: "peanuts",
             title: "I'm allergic to peanuts",
@@ -109,7 +110,7 @@ export const orderFoodCard: IAdaptiveCard = {
           },
           {
             type: "Input.Text",
-            id: "ChickenOther",
+            id: "ChickenOtherRequest",
             isMultiline: true,
             label: "Any other preparation requests?",
           },
@@ -120,7 +121,7 @@ export const orderFoodCard: IAdaptiveCard = {
             type: "Action.Submit",
             title: "OK",
             data: {
-              FoodChoice: "Chicken",
+              SelectedMeal: "Chicken",
             },
           },
         ],
@@ -154,12 +155,143 @@ export const orderFoodCard: IAdaptiveCard = {
             type: "Action.Submit",
             title: "OK",
             data: {
-              FoodChoice: "Vegetarian",
+              SelectedMeal: "Tofu",
             },
           },
         ],
         $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
       },
+    },
+  ],
+};
+
+export type ConfirmOrderCardTemplateProps = {
+  customer: {
+    firstName: string;
+    lastName: string;
+    address: string;
+  };
+  order: {
+    meal: string;
+    notes?: string;
+  };
+};
+
+export const confirmOrderCardTemplate = (
+  props: ConfirmOrderCardTemplateProps
+) =>
+  ({
+    type: "AdaptiveCard",
+    $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
+    version: "1.6",
+    body: [
+      {
+        type: "TextBlock",
+        text: "Please confirm your order",
+        wrap: true,
+        style: "heading",
+      },
+      {
+        type: "FactSet",
+        facts: [
+          {
+            title: "Name",
+            value: `${props.customer?.firstName ?? "Unknown"} ${
+              props.customer?.lastName ?? "Unknown"
+            }`,
+          },
+          {
+            title: "Address",
+            value: props.customer?.address ?? "Unknown",
+          },
+          {
+            title: "Meal",
+            value: props.order?.meal ?? "Unknown",
+          },
+          {
+            title: "Additional Notes",
+            value: props.order?.notes ?? "None",
+          },
+        ],
+      },
+    ],
+    actions: [
+      {
+        id: "confirm",
+        type: "Action.Submit",
+        title: "Order Now",
+        data: "confirm",
+      },
+      {
+        id: "change meal",
+        type: "Action.Submit",
+        title: "Edit Meal",
+        data: "wrong meal",
+      },
+      {
+        id: "change personal data",
+        type: "Action.Submit",
+        title: "Edit Personal Data",
+        data: "personal data incorrect",
+      },
+    ],
+  }) as IAdaptiveCard;
+
+export const personalInfoCard: IAdaptiveCard = {
+  $schema: "http://adaptivecards.io/schemas/adaptive-card.json",
+  type: "AdaptiveCard",
+  version: "1.6",
+  body: [
+    {
+      type: "TextBlock",
+      text: "Personal Informations",
+      weight: "bolder",
+      size: "medium",
+      style: "heading",
+    },
+    {
+      type: "TextBlock",
+      text: "Please share your name and address for the delivery.",
+      isSubtle: true,
+      size: "small",
+    },
+    {
+      type: "Input.Text",
+      label: "First Name",
+      id: "firstname",
+      regex: "^[A-Z][a-z]+, [A-Z][a-z]+$",
+      errorMessage: "Please enter your first name in the specified format",
+      isRequired: true,
+    },
+    {
+      type: "Input.Text",
+      label: "Last Name",
+      id: "lastname",
+      regex: "^[A-Z][a-z]+, [A-Z][a-z]+$",
+      errorMessage: "Please enter your last name in the specified format",
+      isRequired: true,
+    },
+    {
+      type: "Input.Text",
+      label: "Address",
+      id: "address",
+      errorMessage: "Please enter your address",
+      isRequired: true,
+    },
+    {
+      type: "Input.Text",
+      id: "telephone",
+      label: "Phone Number (xxx-xxx-xxxx)",
+      validation: "^[0-9]{3}-[0-9]{3}-[0-9]{4}$",
+      error:
+        "Invalid phone number. Use the specified format: 3 numbers, hyphen, 3 numbers, hyphen and 4 numbers",
+    },
+  ],
+  actions: [
+    {
+      id: "submit",
+      type: "Action.Submit",
+      title: "Submit",
     },
   ],
 };

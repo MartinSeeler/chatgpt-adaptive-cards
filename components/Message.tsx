@@ -1,7 +1,11 @@
 "use client";
 
 import { Message as AIMessage } from "ai";
-import { orderFoodCard } from "@/samples";
+import {
+  confirmOrderCardTemplate,
+  orderFoodCard,
+  personalInfoCard,
+} from "@/samples";
 import AdaptiveCard from "@/components/AdaptiveCard";
 import { Markdown } from "@/components/Markdown";
 import { Fade, Typography, Box, Paper } from "@mui/material";
@@ -56,52 +60,73 @@ export const Message: React.FC<MessageProps> = ({
     <Fade in={true} style={{ transitionDelay: "100ms" }}>
       <MessageContainer
         sx={{
-          justifyContent: role === "assistant" ? "flex-start" : "flex-end",
+          alignItems: role === "assistant" ? "start" : "end",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
         }}
       >
-        <MessagePaper elevation={2} role={role}>
-          <ContentBox>
-            {content && (
-              <Box>
-                <Markdown>{content as string}</Markdown>
-              </Box>
-            )}
+        {content && (
+          <MessagePaper elevation={2} role={role}>
+            <ContentBox>
+              <Markdown>{content as string}</Markdown>
+            </ContentBox>
+          </MessagePaper>
+        )}
+        {toolInvocations?.map((toolInvocation) => {
+          const { toolName, toolCallId, state } = toolInvocation;
 
-            {toolInvocations?.map((toolInvocation) => {
-              const { toolName, toolCallId, state } = toolInvocation;
+          if (state !== "result") return null;
 
-              if (state !== "result") return null;
+          const { result } = toolInvocation;
 
-              const { result } = toolInvocation;
-
-              return (
-                <Box key={toolCallId}>
-                  {toolName === "showOrderDetails" && (
-                    <Box>
-                      <Typography variant="h6">Show Order Conf</Typography>
-                      <Typography variant="body1">
-                        {JSON.stringify(result, null, 2)}
-                      </Typography>
-                    </Box>
-                  )}
-                  {toolName === "createOrder" && !result && (
-                    <AdaptiveCard
-                      card={orderFoodCard}
-                      onAction={(actionType, data) => {
-                        onToolResult(
-                          toolCallId,
-                          "The user has ordered the following menu: " +
-                            JSON.stringify(data)
-                        );
-                        console.log("Card action", toolCallId, data);
-                      }}
-                    />
-                  )}
-                </Box>
-              );
-            })}
-          </ContentBox>
-        </MessagePaper>
+          return toolName === "showOrderDetails" &&
+            result?.hasOwnProperty("order") ? (
+            <AdaptiveCard
+              key={toolCallId}
+              card={confirmOrderCardTemplate(result)}
+              onAction={(actionType, data) => {
+                onToolResult(
+                  toolCallId,
+                  "The user has selected the option: " + data
+                );
+                console.log("Card action", toolCallId, data);
+              }}
+            />
+          ) : toolName === "createOrder" && !result ? (
+            <AdaptiveCard
+              key={toolCallId}
+              card={orderFoodCard}
+              onAction={(actionType, data) => {
+                onToolResult(
+                  toolCallId,
+                  "User created the following meal order" + JSON.stringify(data)
+                );
+                console.log("Card action", toolCallId, data);
+              }}
+            />
+          ) : toolName === "askPersonalInfos" && !result ? (
+            <AdaptiveCard
+              key={toolCallId}
+              card={personalInfoCard}
+              onAction={(actionType, data) => {
+                onToolResult(
+                  toolCallId,
+                  "The user has entered the following data: " +
+                    JSON.stringify(data, null, 2)
+                );
+              }}
+            />
+          ) : result ? (
+            <Typography
+              variant="subtitle2"
+              color="textSecondary"
+              textAlign="left"
+            >
+              {toolName} returned: {result}
+            </Typography>
+          ) : null;
+        })}
       </MessageContainer>
     </Fade>
   );
