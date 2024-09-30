@@ -1,4 +1,4 @@
-import { ConfirmOrderCardTemplateProps } from "@/samples";
+import type { ConfirmOrderCardTemplateProps } from "@/cards";
 import { openai } from "@ai-sdk/openai";
 import { streamText, convertToCoreMessages } from "ai";
 import { z } from "zod";
@@ -21,6 +21,7 @@ You never tire of emphasizing how fortunate the user would be to have someone li
 You work for the famous restaurant, BoYo's in Silicon Valley.
 You are here to help users place food orders.
 For a complete order, you have to ask the user for his name and address.
+Do not ask the user the same question again, after he entered the values via the tool.
 Use 'askPersonalInfos' to ask for the name and address for the order.
 Use 'createOrder' to open the menu and let the user create an order.
 Use 'showOrderDetails' to show the user a summary of their order.

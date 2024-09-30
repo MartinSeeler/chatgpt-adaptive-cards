@@ -11,11 +11,13 @@ import { FC } from "react";
 const options = [
   {
     title: "Menu",
-    description: "Show the menu of the restaurant and help me choose a dish.",
+    description: "Order something to eat",
+    action: "Hi, I would like to order!",
   },
   {
     title: "Markdown",
-    description:
+    description: "Show Markdown syntax examples",
+    action:
       "Write a creative text using lots of different Markdown syntax elements.",
   },
 ];
@@ -72,7 +74,7 @@ const EmptyScreen: FC<EmptyScreenProps> = ({ onSelectQuickOption }) => {
           <Grid size={6} key={index}>
             <Card
               style={{ cursor: "pointer" }}
-              onClick={() => onSelectQuickOption(option.description)}
+              onClick={() => onSelectQuickOption(option.action)}
             >
               <CardContent style={{ textAlign: "center" }}>
                 <Typography variant="h6" gutterBottom>

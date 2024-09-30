@@ -1,6 +1,4 @@
-import { ConfirmOrderCardTemplate } from "./index";
 // @ts-nocheck
-
 import type { IAdaptiveCard } from "adaptivecards";
 
 export const orderFoodCard: IAdaptiveCard = {
@@ -256,12 +254,20 @@ export const personalInfoCard: IAdaptiveCard = {
       size: "small",
     },
     {
+      type: "TextBlock",
+      text: "First Name*",
+    },
+    {
       type: "Input.Text",
       label: "First Name",
       id: "firstname",
       regex: "^[A-Z][a-z]+, [A-Z][a-z]+$",
       errorMessage: "Please enter your first name in the specified format",
       isRequired: true,
+    },
+    {
+      type: "TextBlock",
+      text: "Last Name*",
     },
     {
       type: "Input.Text",
@@ -272,11 +278,20 @@ export const personalInfoCard: IAdaptiveCard = {
       isRequired: true,
     },
     {
+      type: "TextBlock",
+      text: "Address*",
+    },
+    {
       type: "Input.Text",
       label: "Address",
+      labelPosition: "inline",
       id: "address",
       errorMessage: "Please enter your address",
       isRequired: true,
+    },
+    {
+      type: "TextBlock",
+      text: "Phone Number",
     },
     {
       type: "Input.Text",

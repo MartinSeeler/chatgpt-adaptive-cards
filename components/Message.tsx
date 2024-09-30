@@ -5,8 +5,8 @@ import {
   confirmOrderCardTemplate,
   orderFoodCard,
   personalInfoCard,
-} from "@/samples";
-import AdaptiveCard from "@/components/AdaptiveCard";
+} from "@/cards";
+import AdaptiveCard from "@/components/cards/AdaptiveCard";
 import { Markdown } from "@/components/Markdown";
 import { Fade, Typography, Box, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -100,7 +100,7 @@ export const Message: React.FC<MessageProps> = ({
               onAction={(actionType, data) => {
                 onToolResult(
                   toolCallId,
-                  "User created the following meal order" + JSON.stringify(data)
+                  "User has ordered the meal:" + JSON.stringify(data, null, 2)
                 );
                 console.log("Card action", toolCallId, data);
               }}
@@ -123,7 +123,7 @@ export const Message: React.FC<MessageProps> = ({
               color="textSecondary"
               textAlign="left"
             >
-              {toolName} returned: {result}
+              LLM tool <b>{toolName}</b> returned: {result}
             </Typography>
           ) : null;
         })}

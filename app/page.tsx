@@ -14,8 +14,6 @@ import { useChat } from "ai/react";
 import { Message } from "@/components/Message";
 import { useScrollToBottom } from "@/components/use-scroll-to-bottom";
 import EmptyScreen from "@/components/EmptyScreen";
-import AdaptiveCard from "@/components/AdaptiveCard";
-import { confirmOrderCardTemplate, personalInfoCard } from "@/samples";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1, 2),
@@ -121,7 +119,6 @@ export default function Home() {
             />
           ))}
           <div ref={messagesEndRef} />
-          {/* <AdaptiveCard card={personalInfoCard} /> */}
         </MessageContainer>
       </MainContent>
 

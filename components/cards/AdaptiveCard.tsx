@@ -3,6 +3,7 @@ import * as AdaptiveCards from "adaptivecards";
 import type { IAdaptiveCard } from "adaptivecards/lib/schema";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
+import { TextInput } from "./components/TextInput";
 
 export type AdaptiveCardProps = {
   card: IAdaptiveCard;
@@ -16,6 +17,11 @@ const StyledCardWrapper = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   boxShadow: theme.shadows[1],
 }));
+
+AdaptiveCards.AdaptiveCard.elementTypeRegistry.registerType(
+  TextInput.JsonTypeName,
+  () => new TextInput()
+);
 
 const AdaptiveCard = ({ card, onAction }: AdaptiveCardProps) => {
   const cardWrapperRef = React.useRef<HTMLDivElement>(null);
