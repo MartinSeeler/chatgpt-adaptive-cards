@@ -119,6 +119,7 @@ export const Message: React.FC<MessageProps> = ({
             />
           ) : result ? (
             <Typography
+              key={toolCallId}
               variant="subtitle2"
               color="textSecondary"
               textAlign="left"

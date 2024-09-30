@@ -29,7 +29,13 @@ type EmptyScreenProps = {
 const EmptyScreen: FC<EmptyScreenProps> = ({ onSelectQuickOption }) => {
   return (
     <>
-      <Box textAlign="center" mb={4}>
+      <Box
+        textAlign="center"
+        mb={4}
+        gap={2}
+        display="flex"
+        flexDirection="column"
+      >
         <Typography variant="h4" gutterBottom>
           Welcome to the ChatGPT Demo!
         </Typography>
@@ -68,10 +74,21 @@ const EmptyScreen: FC<EmptyScreenProps> = ({ onSelectQuickOption }) => {
           </Link>{" "}
           to render dynamic and interactive responses.
         </Typography>
+        <Typography variant="body1">
+          You can either talk with the AI or explore the options below to get
+          started. Or you can try out some orders from the menu, where adaptive
+          cards are used to confirm the order.
+        </Typography>
       </Box>
       <Grid container spacing={3} justifyContent="center">
         {options.map((option, index) => (
-          <Grid size={6} key={index}>
+          <Grid
+            size={{
+              xs: 12,
+              sm: 6,
+            }}
+            key={index}
+          >
             <Card
               style={{ cursor: "pointer" }}
               onClick={() => onSelectQuickOption(option.action)}
